@@ -2,9 +2,7 @@
 	bfs
 	This problem requires you to implement a basic BFS algorithm
 */
-
-//I AM NOT DONE
-use std::collections::VecDeque;
+use std::collections::{VecDeque, HashMap};
 
 // Define a graph
 struct Graph {
@@ -31,6 +29,25 @@ impl Graph {
 		//TODO
 
         let mut visit_order = vec![];
+
+        let mut queue: VecDeque<usize> = VecDeque::new();
+        let mut hush: HashMap<usize, bool> = HashMap::new();
+        queue.push_back(start);
+        hush.insert(start, true);
+        while let Some(visited) = queue.pop_front() {
+            visit_order.push(visited);
+            
+            for &child in self.adj[visited].iter() {
+                match hush.get(&child) {
+                    Some(_) => {}
+                    _ => {
+                        queue.push_back(child);
+                        hush.insert(child, true);
+                    }
+                }
+            }
+        }
+
         visit_order
     }
 }

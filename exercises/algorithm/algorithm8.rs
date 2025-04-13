@@ -1,9 +1,7 @@
 /*
 	queue
-	This question requires you to use queues to implement the functionality of the stac
+	This question requires you to use queues to implement the functionality of the stack
 */
-// I AM NOT DONE
-
 #[derive(Debug)]
 pub struct Queue<T> {
     elements: Vec<T>,
@@ -56,26 +54,54 @@ pub struct myStack<T>
 {
 	//TODO
 	q1:Queue<T>,
-	q2:Queue<T>
+	q2:Queue<T>,
+    which: usize,
+    size: usize
 }
 impl<T> myStack<T> {
     pub fn new() -> Self {
         Self {
 			//TODO
 			q1:Queue::<T>::new(),
-			q2:Queue::<T>::new()
+			q2:Queue::<T>::new(),
+            which: 0usize,
+            size: 0usize
         }
     }
     pub fn push(&mut self, elem: T) {
         //TODO
+        if self.which == 0 {
+            self.q1.enqueue(elem);
+        }
+        else {
+            self.q2.enqueue(elem);
+        }
+        self.size += 1;
     }
     pub fn pop(&mut self) -> Result<T, &str> {
         //TODO
+        if self.size > 0 {
+            self.size -= 1;
+            if self.which == 0 {
+                self.which = 1;
+                for _ in 0..self.q1.size() - 1 {
+                    self.q2.enqueue(self.q1.dequeue().unwrap());
+                }
+                return Ok(self.q1.dequeue().unwrap());
+            }
+            else {
+                self.which = 0;
+                for _ in 0..self.q2.size() - 1 {
+                    self.q1.enqueue(self.q2.dequeue().unwrap());
+                }
+                return Ok(self.q2.dequeue().unwrap());
+            }
+        }
 		Err("Stack is empty")
     }
     pub fn is_empty(&self) -> bool {
 		//TODO
-        true
+        if self.size == 0 {true} else {false}
     }
 }
 

@@ -2,11 +2,11 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 use std::vec::*;
+use std::cmp::Ord;
 
 #[derive(Debug)]
 struct Node<T> {
@@ -69,14 +69,33 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+	pub fn merge(mut list_a:LinkedList<T>, mut list_b:LinkedList<T>) -> Self
+    where
+        T: Clone + Ord,
 	{
 		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		let mut merged = Self::new();
+        let mut left = 0;
+        let mut right = 0;
+        while let (Some(l), Some(r)) = (list_a.get(left), list_b.get(right)) {
+            if *l < *r {
+                merged.add(l.clone());
+                left += 1;
+            }
+            else {
+                merged.add(r.clone());
+                right += 1;
+            }
         }
+        while let Some(l) = list_a.get(left) {
+            merged.add(l.clone());
+            left += 1;
+        }
+        while let Some(r) = list_b.get(right) {
+            merged.add(r.clone());
+            right += 1;
+        }
+        merged
 	}
 }
 
